@@ -1,25 +1,47 @@
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 
-public class tester{
-  public static void main(String[] args){
-    Result result = JUnitCore.runClasses(tester.class);
 
-    for (Failure failure : result.getFailures()) {
-      System.out.println(failure.toString());
-    }
+public class tester {
 
-    System.out.println(result.wasSuccessful());
+
+  @Test
+  public void invalidLocationsYMin() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, 0, 1, -1, 1));
   }
   
-  /* Example from the README */
+  @Test
+  public void invalidLocationsXMin() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, -1, 0, 0, 1));
+  }  
+  
+  @Test
+  public void invalidLocationsXOrder() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, 1, 0, 0, 1));
+  }
+  
+  @Test
+  public void invalidLocationsYOrder() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, 0, 1, 1, 0));
+  }
+  
+  @Test
+  public void invalidLocationsXTooBig() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, 0, 3, 0, 1));
+  }
+  
+  @Test
+  public void invalidLocationsYTooBig() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    assertNull(extractAndTest.extractSubArray(input, 0, 1, 0, 2));
+  }
+  
   @Test
   public void validLocationsExtractRect() {
     int[][] input = {{1,2},{3,4,5},{6,7}};
@@ -28,62 +50,65 @@ public class tester{
   }
   
   @Test
-  public void invalidLocationsXOrder() {
+  public void invalidLocationsExtractSquare() {
     int[][] input = {{1,2},{3,4,5},{6,7}};
-    assertNull(extractAndTest.extractSubArray(input, 2, 0, 0, 1));
+    int[][] output = {{1,2},{3,4}};
+    assertArrayEquals(output, extractAndTest.extractSubArray(input, 0, 1, 0, 1));
   }
   
   @Test
-  public void invalidLocationsYTooBig() {
+  public void invalidLocationsExtractRow() {
     int[][] input = {{1,2},{3,4,5},{6,7}};
-    assertNull(extractAndTest.extractSubArray(input, 0, 1, 0, 2));
-  }
-
-  @Test
-  public void invalidLocationsYTooBig2() {
-    int[][] input = {{1, 2, 3},{1, 2},{6,7, 8}};
-    int[][] output = {{1,2},{1, 2},{6,7}};
-
-    assertArrayEquals(output, extractAndTest.extractSubArray(input, 0, 2, 0, 1));
-    assertNull(extractAndTest.extractSubArray(input, 0, 2, 0, 2));
-  }
-
-  @Test
-  public void invalidLocationsYTooBig3() {
-    int[][] input = {
-            {1, 2, 3},
-            {1, 2, 3},
-            {6,7, 8}};
-    int[][] output = {
-            {1, 2, 3},
-            {6,7, 8}};
-    int[][] ans = extractAndTest.extractSubArray(input, 1, 2, 0, 2);
-
-
-
-    for(int i = 0; i < ans.length; i++){
-      for(int j = 0; j < ans[i].length; j++){
-        System.out.print(ans[i][j]);
-      }
-      System.out.println("");
-    }
-    assertArrayEquals(output, ans);
-  }
-
-  @Test
-  public void rowMinGreaterThanZero() {
-    int[][] input = {
-            {1, 2, 3, 5},
-            {1, 2, 3},
-            {6, 7, 8, 9}};
-    int[][] output = {{1, 2, 3}, {1, 2, 3}, {6, 7, 8}};
-
-    assertArrayEquals(output, extractAndTest.extractSubArray(input, 0, 2, 0, 2));
+    int[][] output = {{3,4,5}};
+    assertArrayEquals(output, extractAndTest.extractSubArray(input, 1, 1, 0, 2));
   }
   
   @Test
-  public void hasTrue() {
-    boolean[][] input = {{true,false},{false},{false,false,false,false}};
+  public void invalidLocationsExtractCol() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    int[][] output = {{2},{4},{7}};
+    assertArrayEquals(output, extractAndTest.extractSubArray(input, 0, 2, 1, 1));
+  }
+  
+  @Test
+  public void invalidLocationsExtractSingle() {
+    int[][] input = {{1,2},{3,4,5},{6,7}};
+    int[][] output = {{6}};
+    assertArrayEquals(output, extractAndTest.extractSubArray(input, 2, 2, 0, 0));
+  }
+
+  @Test
+  public void hasTrueFull() {
+    boolean[][] input = {{false,true},{false,false},{true,false}};
     assertFalse(extractAndTest.noneTrue(input));
   }
+  
+
+  @Test
+  public void hasTrueJagged() {
+    boolean[][] input = {{false,true,false,false},{false,false},{false,true,false}};
+    assertFalse(extractAndTest.noneTrue(input));
+  }
+  
+
+  @Test
+  public void empty() {
+    boolean[][] input = {{}};
+    assertTrue(extractAndTest.noneTrue(input));
+  }
+  
+  @Test
+  public void noTrueFull() {
+    boolean[][] input = {{false,false},{false,false},{false,false}};
+    assertTrue(extractAndTest.noneTrue(input));
+  }
+  
+
+  @Test
+  public void noTrueJagged() {
+    boolean[][] input = {{false,false,false,false},{false,false},{false,false,false}};
+    assertTrue(extractAndTest.noneTrue(input));
+  }
+
+  
 }
